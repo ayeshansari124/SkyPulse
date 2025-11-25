@@ -5,53 +5,35 @@ import WeatherCard from "../components/WeatherCard";
 
 export type WeatherData = {
   name: string;
-  main: {
-    temp: number;
-    feels_like: number;
-    humidity: number;
-  };
-  weather: {
-    description: string;
-    icon: string;
-  }[];
+  main: { temp: number; feels_like: number; humidity: number };
+  weather: { description: string; icon: string }[];
 };
 
 export default function Home() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [error, setError] = useState<string | null>(null);
-
   const apiKey = "0e628bd641b408f9bb831d9897518f0e";
 
   async function getWeather() {
-    if (!city.trim()) {
-      setError("Please enter your city name");
-      setWeather(null);
-      return;
-    }
-
+    if (!city.trim()) return setError("Please enter your city name"), setWeather(null);
     try {
       const res = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
       );
       if (!res.ok) throw new Error("City not found");
-
-      const data: WeatherData = await res.json();
-      setWeather(data);
+      setWeather(await res.json());
       setError(null);
-    } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError("An unknown error occurred");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unknown error");
       setWeather(null);
     }
   }
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-300 to-blue-100 p-6 font-sans">
-      <div className="bg-white/90 backdrop-blur-lg w-full max-w-sm sm:max-w-md rounded-2xl shadow-lg p-6 sm:p-8 text-center">
-        <h1 className="text-2xl sm:text-3xl font-bold text-blue-800 mb-6">
-          ☀️ Weather App
-        </h1>
+    <main className="flex flex-col items-center justify-center min-h-screen p-6">
+      <div className="bg-black/30 backdrop-blur-md border border-white/20 w-full max-w-md rounded-2xl shadow-2xl p-6 sm:p-8 text-center">
+        <h1 className="text-3xl font-bold text-white mb-6">☀️ Weather App</h1>
 
         <div className="flex flex-col sm:flex-row gap-3 mb-5">
           <input
@@ -59,28 +41,22 @@ export default function Home() {
             placeholder="Enter city name"
             value={city}
             onChange={(e) => setCity(e.target.value)}
-            className="flex-1 px-4 py-2 text-base rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800 w-full"
+            className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-400 text-white"
           />
           <button
             onClick={getWeather}
-            className="px-4 py-2 sm:px-5 sm:py-2 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 active:scale-95 transition w-full sm:w-auto"
+            className="px-5 py-2 rounded-lg bg-green-900 text-white font-medium hover:bg-green-800 cursor-pointer active:scale-95 transition"
           >
             Get Weather
           </button>
         </div>
 
-        <div className="text-base text-gray-800">
-          {error && (
-            <p className="text-red-500 bg-red-50 p-2 rounded-md text-sm mb-2">
-              {error}
-            </p>
-          )}
-          {weather && <WeatherCard data={weather} />}
-        </div>
+        {error && <p className="text-red-600 bg-red-100 p-2 rounded-md mb-2 text-sm">{error}</p>}
+        {weather && <WeatherCard data={weather} />}
       </div>
 
-      <footer className="mt-6 text-gray-700 text-sm opacity-75">
-        Built with ❤️ by <span className="font-medium">Ayesha</span>
+      <footer className="mt-6 text-white text-sm opacity-80">
+        Built with 💙 by <span className="font-semibold">Ayesha</span>
       </footer>
     </main>
   );
