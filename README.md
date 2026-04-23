@@ -1,4 +1,4 @@
-# ⛅ Weather App – Next.js + TypeScript + Tailwind
+# ⛅ SkyPulse – Next.js + TypeScript + Tailwind
 
 A **modern weather forecast app** built with **Next.js, TypeScript, and Tailwind CSS**.  
 It fetches **real-time weather data** using the **OpenWeather API**, providing a clean and responsive UI for checking city-based weather.
